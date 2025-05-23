@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="jv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Belajar Aksara Jawa</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-image: url('https://i.imgur.com/M7lz4D1.png');
+      background-size: cover;
+      background-attachment: fixed;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      text-align: center;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.85);
+      max-width: 900px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .btn {
+      display: inline-block;
+      margin: 10px;
+      padding: 15px 30px;
+      background-color: #ffd93b;
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s;
+    }
+    .btn:hover {
+      background-color: #ffcb05;
+    }
+    table {
+      width: 100%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background-color: #fff9c4;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border: 1px solid #ffe082;
+      padding: 12px;
+      text-align: center;
+      font-size: 16px;
+    }
+    th {
+      background-color: #ffecb3;
+    }
+    td {
+      background-color: #fffde7;
+      font-family: "Jawa Text", serif;
+    }
+    .keyboard {
+      margin: 15px auto;
+      max-width: 600px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 5px;
+    }
+    .keyboard button {
+      padding: 10px 14px;
+      font-size: 22px;
+      cursor: pointer;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      background-color: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: background-color 0.2s;
+    }
+    .keyboard button:hover {
+      background-color: #ffd93b;
+    }
+    input[type="text"] {
+      font-size: 20px;
+      padding: 10px;
+      width: 70%;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    #feedback {
+      font-size: 18px;
+      margin-top: 15px;
+      min-height: 30px;
+    }
+    #quiz-question {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="menu">
+      <h1>Belajar Aksara Jawa</h1>
+      <button class="btn" onclick="showQuiz()">📓 Mulai Kuis Aksara Jawa</button>
+      <button class="btn" onclick="showKamus()">📘 Buka Kamus Bahasa Jawa</button>
+    </div>
+
+    <div id="app"></div>
+  </div>
+
+  <script>
+    // Data kamus sekitar 50 kata, bisa kamu tambahkan sendiri lebih banyak
+    const data = [
+      { indonesia: 'makan', jawa: 'mangan', aksara: 'ꦩꦔꦤ꧀' },
+      { indonesia: 'tidur', jawa: 'turu', aksara: 'ꦠꦸꦫꦸ' },
+      { indonesia: 'minum', jawa: 'ngombe', aksara: 'ꦔꦺꦴꦩ꧀ꦧꦺ' },
+      { indonesia: 'berjalan', jawa: 'mlaku', aksara: 'ꦩ꧀ꦭꦏꦸ' },
+      { indonesia: 'rumah', jawa: 'omah', aksara: 'ꦲꦺꦴꦩꦃ' },
+      { indonesia: 'saya', jawa: 'kulo', aksara: 'ꦏꦸꦭꦺꦴ' },
+      { indonesia: 'kamu', jawa: 'sampeyan', aksara: 'ꦱꦩ꧀ꦥꦾꦤ꧀' },
+      { indonesia: 'sepeda', jawa: 'pit', aksara: 'ꦥꦶꦠ꧀' },
+      { indonesia: 'pergi', jawa: 'mantu', aksara: 'ꦩꦤ꧀ꦠꦸ' },
+      { indonesia: 'buku', jawa: 'buku', aksara: 'ꦧꦸꦏꦸ' },
+      { indonesia: 'kucing', jawa: 'kucing', aksara: 'ꦏꦸꦕꦶꦁ' },
+      { indonesia: 'air', jawa: 'banyu', aksara: 'ꦧꦚꦸ' },
+      { indonesia: 'hujan', jawa: 'udan', aksara: 'ꦲꦸꦢꦤ꧀' },
+      { indonesia: 'api', jawa: 'gèlap', aksara: 'ꦒꦺꦭꦥ꧀' },
+      { indonesia: 'matahari', jawa: 'srengenge', aksara: 'ꦱꦿꦼꦔꦼꦁꦒꦺ' },
+      { indonesia: 'bulan', jawa: 'wulan', aksara: 'ꦮꦸꦭꦤ꧀' },
+      { indonesia: 'tanah', jawa: 'lemah', aksara: 'ꦭꦺꦩꦃ' },
+      { indonesia: 'api', jawa: 'geni', aksara: 'ꦒꦼꦤꦶ' },
+      { indonesia: 'air', jawa: 'toya', aksara: 'ꦠꦺꦴꦪ' },
+      { indonesia: 'ikan', jawa: 'iwak', aksara: 'ꦆꦮꦏ꧀' },
+      { indonesia: 'burung', jawa: 'manuk', aksara: 'ꦩꦤꦸꦏ꧀' },
+      { indonesia: 'anjing', jawa: 'asu', aksara: 'ꦲꦱꦸ' },
+      { indonesia: 'jalan', jawa: 'dalan', aksara: 'ꦢꦭꦤ꧀' },
+      { indonesia: 'rumah', jawa: 'dalem', aksara: 'ꦢꦭꦺꦩ꧀' },
+      { indonesia: 'pohon', jawa: 'wit', aksara: 'ꦮꦶꦠ꧀' },
+      { indonesia: 'sayur', jawa: 'sayur', aksara: 'ꦱꦪꦸꦂ' },
+      { indonesia: 'buah', jawa: 'wiji', aksara: 'ꦮꦶꦗꦶ' },
+      { indonesia: 'kerja', jawa: 'gawe', aksara: 'ꦒꦮꦺ' },
+      { indonesia: 'kerja', jawa: 'nyambut', aksara: 'ꦚꦩ꧀ꦧꦸꦠ꧀' },
+      { indonesia: 'anak', jawa: 'anak', aksara: 'ꦲꦤꦏ꧀' },
+      { indonesia: 'ibu', jawa: 'ibu', aksara: 'ꦆꦧꦸ' },
+      { indonesia: 'ayah', jawa: 'bapa', aksara: 'ꦧꦥ' },
+      { indonesia: 'guru', jawa: 'guru', aksara: 'ꦒꦸꦫꦸ' },
+      { indonesia: 'sekolah', jawa: 'sekolah', aksara: 'ꦱꦼꦏꦺꦭꦃ' },
+      { indonesia: 'teman', jawa: 'kanca', aksara: 'ꦏꦚ' },
+      { indonesia: 'kota', jawa: 'kutha', aksara: 'ꦏꦸꦛ' },
+      { indonesia: 'jalan', jawa: 'dalan', aksara: 'ꦢꦭꦤ꧀' },
+      { indonesia: 'kereta', jawa: 'sepur', aksara: 'ꦱꦼꦥꦸꦂ' },
+      { indonesia: 'kereta api', jawa: 'sepur', aksara: 'ꦱꦼꦥꦸꦂ' },
+      { indonesia: 'sepeda motor', jawa: 'motor', aksara: 'ꦩꦺꦴꦠꦺꦂ' },
+      { indonesia: 'mobil', jawa: 'mobil', aksara: 'ꦩꦺꦴꦧꦶꦭ꧀' },
+      { indonesia: 'jalan kaki', jawa: 'mlaku', aksara: 'ꦩ꧀ꦭꦏꦸ' },
+      { indonesia: 'mimpi', jawa: 'ngimpi', aksara: 'ꦔꦶꦩ꧀ꦥꦶ' },
+      { indonesia: 'ngantuk', jawa: 'ngantuk', aksara: 'ꦔꦤ꧀ꦠꦸꦏ꧀' },
+      { indonesia: 'belajar', jawa: 'sinau', aksara: 'ꦱꦶꦤꦲꦸ' },
+      { indonesia: 'bermain', jawa: 'dolanan', aksara: 'ꦢꦺꦴꦭꦤꦤ꧀' },
+      { indonesia: 'main', jawa: 'dolanan', aksara: 'ꦢꦺꦴꦭꦤꦤ꧀' },
+      { indonesia: 'tulis', jawa: 'nulis', aksara: 'ꦤꦸꦭꦶꦱ꧀' },
+      { indonesia: 'baca', jawa: 'waca', aksara: 'ꦮꦕ' },
+      { indonesia: 'lihat', jawa: 'deleng', aksara: 'ꦢꦺꦭꦼꦁ' },
+      { indonesia: 'dengar', jawa: 'rungu', aksara: 'ꦫꦸꦔꦸ' },
+      { indonesia: 'tahu', jawa: 'weruh', aksara: 'ꦮꦺꦫꦸꦃ' },
+    ];
+
+    // Show Kamus
+    function showKamus() {
+      const app = document.getElementById('app');
+      app.innerHTML = `
+        <h2>Kamus Aksara Jawa</h2>
+        <table>
+          <thead>
+            <tr><th>Bahasa Indonesia</th><th>Bahasa Jawa</th><th>Aksara Jawa</th></tr>
+          </thead>
+          <tbody>
+            ${data.map(k => `
+              <tr>
+                <td>${k.indonesia}</td>
+                <td>${k.jawa}</td>
+                <td style="font-family: 'Jawa Text', serif; font-size: 22px;">${k.aksara}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    // Show Quiz
+    function showQuiz() {
+      let index = 0;
+      let skor = 0;
+      const soal = [...data].sort(() => 0.5 - Math.random());
+      const app = document.getElementById('app');
+
+      let currentQuestionType = null; // 'toIndo' or 'toAksara'
+
+      function tampilkanSoal() {
+        if (index >= soal.length) {
+          app.innerHTML = `
+            <h2>Kuis Selesai!</h2>
+            <p>Skor kamu: ${skor} dari ${soal.length}</p>
+            <button class="btn" onclick="showQuiz()">Ulangi Kuis</button>
+          `;
+          return;
+        }
+
+        const q = soal[index];
+        currentQuestionType = Math.random() < 0.5 ? 'toIndo' : 'toAksara';
+
+        let questionHtml = '';
+        if (currentQuestionType === 'toIndo') {
+          questionHtml = `Apa arti dari: <span style="font-size:40px; font-family: 'Jawa Text', serif;">${q.aksara}</span>`;
+        } else {
+          questionHtml = `Apa aksara Jawa dari: <b>${q.indonesia}</b>`;
+        }
+
+        app.innerHTML = `
+          <div id="quiz-question">${questionHtml}</div>
+          <input type="text" id="jawaban" placeholder="Tulis jawaban kamu di sini" autofocus />
+          <div class="keyboard">${keyboard()}</div>
+          <button class="btn" id="btn-submit">Kirim Jawaban</button>
+          <div id="feedback"></div>
+          <br>
+          <button class="btn" onclick="showMenu()">Kembali ke Menu</button>
+        `;
+
+        document.getElementById('btn-submit').onclick = cekJawaban;
+      }
+
+      function cekJawaban() {
+        const input = document.getElementById('jawaban').value.trim().toLowerCase();
+        const current = soal[index];
+        let benar = false;
+        let jawabanBenar = '';
+
+        if (currentQuestionType === 'toIndo') {
+          // Jawaban yang benar adalah bahasa jawa atau bahasa indonesia dari data
+          jawabanBenar = current.indonesia.toLowerCase();
+          benar = input === jawabanBenar;
+        } else {
+          // Jawaban benar adalah aksara jawa
+          jawabanBenar = current.aksara;
+          benar = input === jawabanBenar;
+        }
+
+        const feedback = document.getElementById('feedback');
+        if (benar) {
+          feedback.innerHTML = `<p style="color:green;">✅ Benar!</p>`;
+          skor++;
+        } else {
+          feedback.innerHTML = `<p style="color:red;">❌ Salah! Jawaban benar: <b>${jawabanBenar}</b></p>`;
+        }
+
+        index++;
+        setTimeout(tampilkanSoal, 2000);
+      }
+
+      tampilkanSoal();
+    }
+
+    // Keyboard digital aksara jawa
+    function keyboard() {
+      const aksara = [
+        'ꦲ','ꦤ','ꦢ','ꦠ','ꦱ','ꦭ','ꦩ','ꦛ','ꦚ','ꦒ','ꦧ',
+        'ꦛꦶ','ꦛꦸ','ꦝ','ꦕ','ꦗ','ꦥ','ꦎ','ꦺ','ꦻ','ꦼ',
+        'ꦽ','ꦾ','ꦿ','꧀','꧁','꧂','ꦄ','ꦅ','ꦆ','ꦇ','ꦈ','ꦉ','ꦊ','ꦋ'
+      ];
+      return aksara.map(a => 
+        `<button onclick="document.getElementById('jawaban').value += '${a}'">${a}</button>`
+      ).join('');
+    }
+
+    // Fungsi kembali ke menu awal
+    function showMenu() {
+      document.getElementById('app').innerHTML = '';
+    }
+
+  </script>
+</body>
+</html>
